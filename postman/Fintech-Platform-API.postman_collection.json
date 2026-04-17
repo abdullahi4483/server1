@@ -1,0 +1,242 @@
+{
+  "info": {
+    "name": "API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "collection"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "accountId", "value": "" },
+    { "key": "transactionId", "value": "" },
+    { "key": "cardId", "value": "" },
+    { "key": "withdrawalId", "value": "" },
+    { "key": "messageId", "value": "" },
+    { "key": "userId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        { "name": "GET /health", "request": { "method": "GET", "url": "{{baseUrl}}/health" } }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /auth/signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/signup",
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"John Anderson\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+15551234567\",\n  \"password\": \"Password123!\"\n}" }
+          }
+        },
+        {
+          "name": "POST /auth/login",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["const j=pm.response.json(); if(j.accessToken) pm.collectionVariables.set('accessToken',j.accessToken); if(j.refreshToken) pm.collectionVariables.set('refreshToken',j.refreshToken);"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123!\"\n}" }
+          }
+        },
+        {
+          "name": "POST /auth/refresh",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["const j=pm.response.json(); if(j.accessToken) pm.collectionVariables.set('accessToken',j.accessToken); if(j.refreshToken) pm.collectionVariables.set('refreshToken',j.refreshToken);"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/refresh",
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+          }
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/logout",
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+          }
+        },
+        {
+          "name": "POST /auth/change-password",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/change-password",
+            "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"Password123!\",\n  \"newPassword\": \"Password123!\"\n}" }
+          }
+        },
+        {
+          "name": "POST /auth/forgot-password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/forgot-password",
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\"\n}" }
+          }
+        },
+        {
+          "name": "POST /auth/reset-password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/reset-password",
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"dummy-token\",\n  \"newPassword\": \"NewPassword123!\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+      "item": [
+        { "name": "GET /dashboard/summary", "request": { "method": "GET", "url": "{{baseUrl}}/dashboard/summary" } },
+        { "name": "GET /accounts", "request": { "method": "GET", "url": "{{baseUrl}}/accounts" } },
+        { "name": "GET /accounts/:accountId", "request": { "method": "GET", "url": "{{baseUrl}}/accounts/{{accountId}}" } },
+        { "name": "GET /transactions", "request": { "method": "GET", "url": "{{baseUrl}}/transactions?page=1&pageSize=20" } },
+        { "name": "GET /transactions/:transactionId", "request": { "method": "GET", "url": "{{baseUrl}}/transactions/{{transactionId}}" } },
+        {
+          "name": "POST /withdrawals",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/withdrawals",
+            "body": { "mode": "raw", "raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"amount\": \"100.00\",\n  \"currency\": \"USD\"\n}" }
+          }
+        },
+        { "name": "GET /withdrawals", "request": { "method": "GET", "url": "{{baseUrl}}/withdrawals?page=1&pageSize=20" } },
+        { "name": "GET /withdrawals/:withdrawalId", "request": { "method": "GET", "url": "{{baseUrl}}/withdrawals/{{withdrawalId}}" } },
+        { "name": "GET /cards", "request": { "method": "GET", "url": "{{baseUrl}}/cards" } },
+        { "name": "PATCH /cards/:cardId/freeze", "request": { "method": "PATCH", "url": "{{baseUrl}}/cards/{{cardId}}/freeze" } },
+        { "name": "PATCH /cards/:cardId/unfreeze", "request": { "method": "PATCH", "url": "{{baseUrl}}/cards/{{cardId}}/unfreeze" } },
+        {
+          "name": "POST /cards/:cardId/replace",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/cards/{{cardId}}/replace",
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Card damaged\"\n}" }
+          }
+        },
+        {
+          "name": "POST /support/messages",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/support/messages",
+            "body": { "mode": "raw", "raw": "{\n  \"category\": \"GENERAL\",\n  \"subject\": \"Need help\",\n  \"message\": \"Please assist with my account.\"\n}" }
+          }
+        },
+        { "name": "GET /support/messages", "request": { "method": "GET", "url": "{{baseUrl}}/support/messages?page=1&pageSize=20" } },
+        { "name": "GET /support/messages/:messageId", "request": { "method": "GET", "url": "{{baseUrl}}/support/messages/{{messageId}}" } },
+        { "name": "GET /settings/profile", "request": { "method": "GET", "url": "{{baseUrl}}/settings/profile" } },
+        {
+          "name": "PATCH /settings/profile",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/settings/profile",
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"John A.\",\n  \"phone\": \"+15557654321\"\n}" }
+          }
+        },
+        { "name": "GET /settings/security", "request": { "method": "GET", "url": "{{baseUrl}}/settings/security" } },
+        {
+          "name": "PATCH /settings/security",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/settings/security",
+            "body": { "mode": "raw", "raw": "{\n  \"twoFactorEnabled\": true\n}" }
+          }
+        },
+        { "name": "GET /settings/notifications", "request": { "method": "GET", "url": "{{baseUrl}}/settings/notifications" } },
+        {
+          "name": "PATCH /settings/notifications",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/settings/notifications",
+            "body": { "mode": "raw", "raw": "{\n  \"emailNotifications\": true,\n  \"pushNotifications\": false\n}" }
+          }
+        },
+        { "name": "GET /settings/preferences", "request": { "method": "GET", "url": "{{baseUrl}}/settings/preferences" } },
+        {
+          "name": "PATCH /settings/preferences",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/settings/preferences",
+            "body": { "mode": "raw", "raw": "{\n  \"language\": \"en\",\n  \"currency\": \"USD\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+      "item": [
+        { "name": "GET /admin/dashboard/summary", "request": { "method": "GET", "url": "{{baseUrl}}/admin/dashboard/summary" } },
+        { "name": "GET /admin/users", "request": { "method": "GET", "url": "{{baseUrl}}/admin/users?page=1&pageSize=20" } },
+        { "name": "GET /admin/users/:userId", "request": { "method": "GET", "url": "{{baseUrl}}/admin/users/{{userId}}" } },
+        {
+          "name": "PATCH /admin/users/:userId/status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/admin/users/{{userId}}/status",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" }
+          }
+        },
+        {
+          "name": "POST /admin/users",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/admin/users",
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"+15550001111\",\n  \"password\": \"Password123!\"\n}" }
+          }
+        },
+        { "name": "GET /admin/transactions", "request": { "method": "GET", "url": "{{baseUrl}}/admin/transactions?page=1&pageSize=20" } },
+        { "name": "GET /admin/withdrawals", "request": { "method": "GET", "url": "{{baseUrl}}/admin/withdrawals?page=1&pageSize=20" } },
+        { "name": "PATCH /admin/withdrawals/:withdrawalId/approve", "request": { "method": "PATCH", "url": "{{baseUrl}}/admin/withdrawals/{{withdrawalId}}/approve" } },
+        {
+          "name": "PATCH /admin/withdrawals/:withdrawalId/reject",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/admin/withdrawals/{{withdrawalId}}/reject",
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Verification failed\"\n}" }
+          }
+        },
+        { "name": "GET /admin/messages", "request": { "method": "GET", "url": "{{baseUrl}}/admin/messages?page=1&pageSize=20" } },
+        {
+          "name": "POST /admin/messages/:messageId/reply",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/admin/messages/{{messageId}}/reply",
+            "body": { "mode": "raw", "raw": "{\n  \"body\": \"Thanks for reaching out.\"\n}" }
+          }
+        },
+        { "name": "PATCH /admin/messages/:messageId/resolve", "request": { "method": "PATCH", "url": "{{baseUrl}}/admin/messages/{{messageId}}/resolve" } },
+        { "name": "GET /admin/settings", "request": { "method": "GET", "url": "{{baseUrl}}/admin/settings" } },
+        {
+          "name": "PATCH /admin/settings",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/admin/settings",
+            "body": { "mode": "raw", "raw": "{\n  \"platformName\": \"Fintech\",\n  \"supportEmail\": \"support@fintech.com\",\n  \"adminEmail\": \"admin@fintech.com\",\n  \"withdrawalManualThreshold\": \"10000\",\n  \"autoApproveEnabled\": false,\n  \"autoApproveMaxAmount\": \"1000\",\n  \"sessionTimeoutMinutes\": 30,\n  \"apiRateLimitPerHour\": 1000\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}
