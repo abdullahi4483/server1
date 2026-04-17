@@ -4,8 +4,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import type { StringValue } from 'ms';
 import { PrismaService } from '../prisma/prisma.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { LoginDto } from './dto/login.dto';
@@ -179,17 +180,23 @@ export class AuthService {
     role: UserRole,
     replacedBy?: string,
   ) {
+    const accessTokenExpiresIn = (
+      process.env.JWT_ACCESS_EXPIRES_IN ?? '15m'
+    ) as StringValue;
     const accessToken = await this.jwtService.signAsync(
       { sub: userId, email, role },
       {
-        expiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
+        expiresIn: accessTokenExpiresIn,
       },
     );
 
+    const refreshTokenExpiresIn = (
+      process.env.JWT_REFRESH_EXPIRES_IN ?? '30d'
+    ) as StringValue;
     const refreshToken = await this.jwtService.signAsync(
       { sub: userId, email, role, type: 'refresh' },
       {
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN ?? '30d',
+        expiresIn: refreshTokenExpiresIn,
       },
     );
 

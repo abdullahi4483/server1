@@ -1,0 +1,185 @@
+{
+  "info": {
+    "name": "Fintech Admin API",
+    "_postman_id": "fintech-admin-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Admin endpoints for the Fintech platform"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1" },
+    { "key": "accessToken", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "withdrawalId", "value": "" },
+    { "key": "messageId", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Login Admin",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Password123!\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Admin Dashboard Summary",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/dashboard/summary"
+      }
+    },
+    {
+      "name": "List Users",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/users?page=1&pageSize=20"
+      }
+    },
+    {
+      "name": "Get User By Id",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/users/{{userId}}"
+      }
+    },
+    {
+      "name": "Edit Client Details",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/users/{{userId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Jane Updated\",\n  \"email\": \"jane.updated@example.com\",\n  \"phone\": \"+15550002222\",\n  \"amount\": \"2500.00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update User Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/users/{{userId}}/status",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"ACTIVE\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"+15550001111\",\n  \"password\": \"Password123!\"\n}"
+        }
+      }
+    },
+    {
+      "name": "List Transactions",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/transactions?page=1&pageSize=20"
+      }
+    },
+    {
+      "name": "List Withdrawals",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/withdrawals?page=1&pageSize=20"
+      }
+    },
+    {
+      "name": "Approve Withdrawal",
+      "request": {
+        "method": "PATCH",
+        "url": "{{baseUrl}}/admin/withdrawals/{{withdrawalId}}/approve"
+      }
+    },
+    {
+      "name": "Reject Withdrawal",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/withdrawals/{{withdrawalId}}/reject",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"Verification failed\"\n}"
+        }
+      }
+    },
+    {
+      "name": "List Messages",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/messages?page=1&pageSize=20"
+      }
+    },
+    {
+      "name": "Reply To Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/messages/{{messageId}}/reply",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"body\": \"Thanks for reaching out.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Resolve Message",
+      "request": {
+        "method": "PATCH",
+        "url": "{{baseUrl}}/admin/messages/{{messageId}}/resolve"
+      }
+    },
+    {
+      "name": "Get Platform Settings",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/admin/settings"
+      }
+    },
+    {
+      "name": "Update Platform Settings",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/settings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"platformName\": \"Fintech\",\n  \"supportEmail\": \"support@fintech.com\",\n  \"adminEmail\": \"admin@fintech.com\",\n  \"withdrawalManualThreshold\": \"10000\",\n  \"autoApproveEnabled\": false,\n  \"autoApproveMaxAmount\": \"1000\",\n  \"sessionTimeoutMinutes\": 30,\n  \"apiRateLimitPerHour\": 1000\n}"
+        }
+      }
+    }
+  ]
+}

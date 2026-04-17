@@ -186,6 +186,15 @@
         { "name": "GET /admin/users", "request": { "method": "GET", "url": "{{baseUrl}}/admin/users?page=1&pageSize=20" } },
         { "name": "GET /admin/users/:userId", "request": { "method": "GET", "url": "{{baseUrl}}/admin/users/{{userId}}" } },
         {
+          "name": "PATCH /admin/users/:userId",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/admin/users/{{userId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Jane Updated\",\n  \"email\": \"jane.updated@example.com\",\n  \"phone\": \"+15550002222\",\n  \"amount\": \"2500.00\"\n}" }
+          }
+        },
+        {
           "name": "PATCH /admin/users/:userId/status",
           "request": {
             "method": "PATCH",

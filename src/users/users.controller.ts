@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enums/role.enum';
 import { ListUsersQuery } from './dto/list-users.query';
+import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 import { UsersService } from './users.service';
 
@@ -18,6 +19,11 @@ export class UsersController {
   @Get(':userId')
   getById(@Param('userId') userId: string) {
     return this.usersService.getById(userId);
+  }
+
+  @Patch(':userId')
+  update(@Param('userId') userId: string, @Body() dto: UpdateAdminUserDto) {
+    return this.usersService.update(userId, dto);
   }
 
   @Patch(':userId/status')
